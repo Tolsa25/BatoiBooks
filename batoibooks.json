@@ -1,4 +1,4 @@
-const data = {
+{
   "courses": [
     {
       "id": "3",
@@ -1936,5 +1936,3 @@ const data = {
     }
   ]
 }
-
-export default data

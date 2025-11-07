@@ -1,45 +1,63 @@
 import User from './user.class';
+import { getDBUsers, addDBUser, removeDBUser, changeDBUser, changeDBUserPassword } from '../services/users.api.js';
+
 
 class Users {
     constructor() {
         this.data = [];
     }
 
-    populate(dataInicial) {
+    async populate() {
+        const dataInicial = await getDBUsers();
         this.data = dataInicial.map(userData => new User(userData));
     }
 
-    addUser(userData) {
-        const newId = this.data.length > 0 ? Math.max(...this.data.map(u => u.id)) + 1 : 1;
+    async addUser(userData) {
+        const createdUser = await addDBUser(userData);
         
-        const newUserInstance = new User({
-            id: newId,
-            ...userData
-        });
+        const newUserInstance = new User(createdUser);
 
         this.data.push(newUserInstance);
         return newUserInstance;
     }
 
-    removeUser(id) {
+    async removeUser(id) {
+        await removeDBUser(id);
+
         const index = this.data.findIndex(user => user.id === id);
 
         if (index === -1) {
-            throw new Error(`User con id ${id} no encontrado.`);
+            throw new Error(`User con id ${id} no encontrado localmente.`);
         }
 
         this.data.splice(index, 1);
     }
 
-    changeUser(userData) {
+    async changeUser(userData) {
+        const updatedUser = await changeDBUser(userData);
+
         const id = userData.id;
         const index = this.data.findIndex(user => user.id === id);
 
         if (index === -1) {
-            throw new Error(`User con id ${id} no encontrado`);
+            throw new Error(`User con id ${id} no encontrado localmente`);
         }
         
-        this.data[index] = new User(userData);
+        this.data[index] = new User(updatedUser);
+        
+        return this.data[index];
+    }
+    
+    async changeUserPassword(id, newPassword) {
+        const updatedUser = await changeDBUserPassword(id, newPassword); 
+
+        const index = this.data.findIndex(user => user.id === id);
+
+        if (index === -1) {
+            throw new Error(`User con id ${id} no encontrado localmente`);
+        }
+        
+        this.data[index] = new User(updatedUser); 
         
         return this.data[index];
     }

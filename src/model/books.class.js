@@ -1,45 +1,48 @@
 import Book from './book.class';
+import { getDBBooks, addDBBook, removeDBBook, changeDBBook } from '../services/books.api.js'; 
 
 class Books {
     constructor() {
         this.data = [];
     }
 
-    populate(dataInicial) {
+    async populate() {
+        const dataInicial = await getDBBooks(); 
         this.data = dataInicial.map(bookData => new Book(bookData));
     }
 
-    addBook(bookData) {
-        const newId = this.data.length > 0 ? Math.max(...this.data.map(b => b.id)) + 1 : 1;
+    async addBook(bookData) {
+        const createdBook = await addDBBook(bookData); 
         
-        const newBookInstance = new Book({
-            id: newId,
-            ...bookData
-        });
+        const newBookInstance = new Book(createdBook);
 
         this.data.push(newBookInstance);
         return newBookInstance;
     }
 
-    removeBook(id) {
+    async removeBook(id) {
+        await removeDBBook(id); 
+
         const index = this.data.findIndex(book => book.id === id);
 
         if (index === -1) {
-            throw new Error(`Libro con id ${id} no encontrado.`);
+            throw new Error(`Libro con id ${id} no encontrado localmente.`); 
         }
 
         this.data.splice(index, 1);
     }
 
-    changeBook(bookData) {
+    async changeBook(bookData) {
+        const updatedBook = await changeDBBook(bookData);
+
         const id = bookData.id;
         const index = this.data.findIndex(book => book.id === id);
 
         if (index === -1) {
-            throw new Error(`Libro con id ${id} no encontrado`);
+            throw new Error(`Libro con id ${id} no encontrado localmente.`);
         }
 
-        this.data[index] = new Book(bookData);
+        this.data[index] = new Book(updatedBook);
 
         return this.data[index];
     }
@@ -99,17 +102,6 @@ class Books {
     booksNotSold() {
         return this.data.filter(book => book.soldDate === "");
     }
-
-    incrementPriceOfbooks(percentage) {
-        return this.data.map(book => {
-            let newPrice = book.price * (1 + percentage);
-            return {
-                ...book,
-                price: parseFloat(newPrice.toFixed(2))
-            };
-        });
-    }
-
 }
 
 export default Books;
