@@ -10,6 +10,7 @@ class View {
         
         this.removeInput = document.querySelector('#remove-id');
         this.removeButton = document.querySelector('#remove-button');
+        this.resetButton = document.querySelector('#reset');
         
         this.messages.style.display = 'none'; 
     }
