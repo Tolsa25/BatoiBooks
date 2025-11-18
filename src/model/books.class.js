@@ -21,14 +21,13 @@ class Books {
     }
 
     async removeBook(id) {
-        await removeDBBook(id); 
-
         const index = this.data.findIndex(book => book.id === id);
 
         if (index === -1) {
-            throw new Error(`Libro con id ${id} no encontrado localmente.`); 
+            return; 
         }
 
+        await removeDBBook(id); 
         this.data.splice(index, 1);
     }
 
@@ -49,6 +48,10 @@ class Books {
 
     toString() {
         return this.data.map(book => book.toString()).join('\n');
+    }
+
+    getBooks() {
+        return this.data; 
     }
 
     getBookById(bookId) {

@@ -1,4 +1,3 @@
-//getDBUsers    devuelve todos los registros de esa tabla
 export async function getDBUsers() {
     let response = await fetch ('http://localhost:3000/users');
     if(!response.ok){
@@ -9,7 +8,6 @@ export async function getDBUsers() {
     return tabla;
 }
 
-//getDBUser     devuelve el registro cuya id coincide con la pasada como parámetro
 export async function getDBUser(id){
    let url = `http://localhost:3000/users/${id}`;
    let response = await fetch (url);
@@ -22,7 +20,6 @@ export async function getDBUser(id){
     return user;
 }
 
-//addDBUser     recibe un nuevo objeto que añadirá a la tabla
 export async function addDBUser(newUser) {
     let url = 'http://localhost:3000/users';
     let options = {
@@ -40,11 +37,10 @@ export async function addDBUser(newUser) {
         throw new Error(`Error al crear el usuario: ${response.status} ${response.statusText}. Detalle: ${errorText}`);
     }
     
-    let createdUser = await response.json(); // <-- ¡Cambiado de 'newUser' a 'createdUser'!
-    return createdUser; // <-- Devolvemos el nombre corregido.
+    let createdUser = await response.json(); 
+    return createdUser; 
 }
 
-//removeDBUser  recibe la id de un nuevo objeto y lo borrará de la tabla
 export async function removeDBUser(idUser) {
     let url = `http://localhost:3000/users/${idUser}`;
     let options = {
@@ -62,8 +58,6 @@ export async function removeDBUser(idUser) {
         return delUser;
 }
 
-
-//changeDBUser  recibe un objeto que ya existe en la tabla y lo modifica, usando el método PUT
 export async function changeDBUser(user) {
     let url = `http://localhost:3000/users/${user.id}`;
         let options = {
@@ -86,7 +80,6 @@ export async function changeDBUser(user) {
     return updatedUser; 
 }
 
-//changeDBUserPassword    recibe la id de un usuario y su nueva contraseña y lo modifica
 export async function changeDBUserPassword(idUser, newPassword) {
     let url = `http://localhost:3000/users/${idUser}`;
     

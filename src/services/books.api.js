@@ -1,4 +1,3 @@
-//getDBBooks     devuelve todos los registros de esa tabla
 export async function getDBBooks() {
     let response = await fetch ('http://localhost:3000/books');
     if(!response.ok){
@@ -9,7 +8,6 @@ export async function getDBBooks() {
     return tabla;
 }
 
-//getDBBook      devuelve el registro cuya id coincide con la pasada como parámetro
 export async function getDBBook(id){
    let url = `http://localhost:3000/books/${id}`;
    let response = await fetch (url);
@@ -22,7 +20,6 @@ export async function getDBBook(id){
     return libro;
 }
 
-//addDBBook      recibe un nuevo objeto que añadirá a la tabla
 export async function addDBBook(newBook) {
     let url = 'http://localhost:3000/books';
     let options = {
@@ -44,25 +41,27 @@ export async function addDBBook(newBook) {
         return createdBook;
 }
 
-//removeDBBook   recibe la id de un nuevo objeto y lo borrará de la tabla
 export async function removeDBBook(idBook) {
     let url = `http://localhost:3000/books/${idBook}`;
     let options = {
         method: 'DELETE'
     };
 
-        let response = await fetch(url, options);
+    let response = await fetch(url, options);
 
-        if (!response.ok) {
-            let errorText = await response.text();
-            throw new Error(`Error al eliminar el libro: ${response.status} ${response.statusText}. Detalle: ${errorText}`);
-        }
-        
-        let delBook = await response.json();
-        return delBook;
+    if (!response.ok && response.status !== 404) {
+        let errorText = await response.text();
+        throw new Error(`Error al eliminar el libro: ${response.status} ${response.statusText}. Detalle: ${errorText}`);
+    }
+    
+    if (response.status === 204 || response.status === 404) {
+        return null; 
+    }
+    
+    let delBook = await response.json();
+    return delBook;
 }
 
-//changeDBBook   recibe un objeto que ya existe en la tabla y lo modifica, usando el método PUT
 export async function changeDBBook(book) {
     let url = `http://localhost:3000/books/${book.id}`;
         let options = {

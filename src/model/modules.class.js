@@ -18,10 +18,11 @@ class Modules {
 
     getModuleByCode(moduleCode) {
         let module = this.data.find(modulo => modulo.code === moduleCode);
-        if (!module) {
-            throw new Error(`Módulo con código "${moduleCode}" no existe`);
-        }
-        return module;
+        return module; 
+    }
+
+    getModules() {
+        return this.data; 
     }
 }
 

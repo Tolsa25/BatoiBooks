@@ -1,13 +1,103 @@
-<!doctype html>
-<html lang="en">
-  <head>
+<!DOCTYPE html>
+<html lang="es">
+<head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BatoiBooks Kevin</title>
-  </head>
-  <body>
-    <div id="app"></div>
+    <link rel="stylesheet" href="./src/style.css"> 
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <img src="/logoBatoi.png" alt="Logo de Batoi" class="logo">
+            <h1>BatoiBooks</h1>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="#list-section">Ver Libros</a></li>
+                <li><a href="#form-section">Añadir Libro</a></li>
+                <li><a href="#about-section">Acerca de...</a></li>
+            </ul>
+        </nav>
+
+        <div id="messages-container" class="messages-container">
+            <div id="messages-alert" class="tipoRecibido" style="display: none;">
+            </div>
+        </div>
+
+        <main id="main-content">
+
+            <section id="list-section" class="content-section">
+                <h2>Lista de Libros</h2>
+                <div id="list" class="books-list-grid">
+                </div>
+            </section>
+
+            <section id="form-section" class="content-section">
+                <h2>Añadir Nuevo Libro</h2>
+                <form id="addBookForm"> 
+                    
+                    <input type="hidden" id="userId" name="userId" value="1">
+
+                    <div class="form-group">
+                        <label for="moduleCode">Módulo:</label>
+                        <select id="moduleCode" name="moduleCode" required>
+                            <option value="" disabled selected>- Selecciona un módulo -</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="publisher">Editorial:</label>
+                        <input type="text" id="publisher" name="publisher" required maxlength="50">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="price">Precio:</label>
+                        <input type="number" id="price" name="price" required min="0.01" step="0.01">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pages">Páginas:</label>
+                        <input type="number" id="pages" name="pages" required min="1">
+                    </div>
+
+                    <div class="form-group" style="grid-column: 2 / 3;">
+                        <label>Estado:</label>
+                        <div class="radio-group">
+                            <input type="radio" id="status-good" name="status" value="good" required>
+                            <label for="status-good">Buen estado</label>
+                            
+                            <input type="radio" id="status-damaged" name="status" value="damaged">
+                            <label for="status-damaged">Dañado</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="comments">Comentarios:</label>
+                        <textarea id="comments" name="comments" maxlength="500"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit">Añadir</button>
+                        <button type="reset">Reset</button>
+                    </div>
+                </form>
+            </section>
+
+            <section id="about-section" class="content-section">
+                <h2>Acerca de...</h2>
+                <div id="acercaDe">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Odit totam, adipisci iste ducimus id voluptatem aut ea vel aperiam magnam officiis non officia dicta veritatis nihil doloremque fugit!</p>
+                </div>
+            </section>
+
+        </main>
+
+        <footer>
+            <p>Kevin Tolsa Garrido 2-DAW-B</p>
+        </footer>
+    </div>
     <script type="module" src="/src/main.js"></script>
-  </body>
+</body>
 </html>
