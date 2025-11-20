@@ -21,26 +21,27 @@ class Users {
         return newUserInstance;
     }
 
-    async removeUser(id) {
-        await removeDBUser(id);
-
-        const index = this.data.findIndex(user => user.id === id);
-
+   async removeUser(id) {
+        // Corrección: Conversión a string para asegurar la comparación de IDs
+        const stringId = String(id);
+        const index = this.data.findIndex(user => String(user.id) === stringId);
+        
         if (index === -1) {
-            throw new Error(`User con id ${id} no encontrado localmente.`);
+            throw new Error(`User con id ${id} no encontrado localmente.`); 
         }
-
+        await removeDBUser(id); 
         this.data.splice(index, 1);
     }
 
     async changeUser(userData) {
+        const stringId = String(userData.id);
         const updatedUser = await changeDBUser(userData);
 
-        const id = userData.id;
-        const index = this.data.findIndex(user => user.id === id);
+        // Corrección: Conversión a string para asegurar la comparación de IDs
+        const index = this.data.findIndex(user => String(user.id) === stringId); 
 
         if (index === -1) {
-            throw new Error(`User con id ${id} no encontrado localmente`);
+            throw new Error(`User con id ${stringId} no encontrado localmente`);
         }
         
         this.data[index] = new User(updatedUser);
@@ -49,12 +50,14 @@ class Users {
     }
     
     async changeUserPassword(id, newPassword) {
-        const updatedUser = await changeDBUserPassword(id, newPassword); 
+        const stringId = String(id);
+        const updatedUser = await changeDBUserPassword(stringId, newPassword); 
 
-        const index = this.data.findIndex(user => user.id === id);
+        // Corrección: Conversión a string para asegurar la comparación de IDs
+        const index = this.data.findIndex(user => String(user.id) === stringId);
 
         if (index === -1) {
-            throw new Error(`User con id ${id} no encontrado localmente`);
+            throw new Error(`User con id ${stringId} no encontrado localmente`);
         }
         
         this.data[index] = new User(updatedUser); 
@@ -67,7 +70,10 @@ class Users {
     }
 
     getUserById(userId) {
-        const user = this.data.find(user => user.id === userId);
+        // Corrección: Conversión a string para evitar fallos por discrepancia de tipos (3 === "3" es falso)
+        const stringUserId = String(userId); 
+        const user = this.data.find(user => String(user.id) === stringUserId);
+        
         if (!user) {
             throw new Error(`Usuario con ID ${userId} no existe`);
         }
@@ -75,7 +81,10 @@ class Users {
     }
 
     getUserIndexById(userId) {
-        const indice = this.data.findIndex(user => user.id === userId);
+        // Corrección: Conversión a string para evitar fallos por discrepancia de tipos
+        const stringUserId = String(userId); 
+        const indice = this.data.findIndex(user => String(user.id) === stringUserId);
+        
         if (indice === -1) {
             throw new Error(`Usuario con ID ${userId} no existe`);
         }

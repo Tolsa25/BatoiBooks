@@ -24,7 +24,7 @@ class Books {
         const index = this.data.findIndex(book => book.id === id);
 
         if (index === -1) {
-            return; 
+            throw new Error(`Libro con id ${id} no encontrado localmente.`); 
         }
 
         await removeDBBook(id); 
