@@ -79,8 +79,6 @@ class Controller {
     }
     
     handleReset() {
-        // Al llamar a init(), se llama a populate() (que lee el JSON) 
-        // y luego a renderAllBooks() (que repinta la vista).
         this.view.showMessage('Reiniciando la aplicación y recargando los datos...', 'info');
         this.init(); 
     }
@@ -126,18 +124,13 @@ class Controller {
         }
         
         try {
-            // 1. Elimina del Servidor (JSON) y del Modelo Local
             await this.booksModel.removeBook(idToRemove); 
-            
-            // 2. Repinta la vista completamente con la lista corregida del Modelo.
-            // Esto asegura que el libro desaparece permanentemente hasta el reset y más allá.
             this.reloadBooksView(); 
             
             this.view.showMessage(`Libro con ID ${idToRemove} eliminado correctamente.`, 'info');
             
         } catch (error) {
             if (error.message.includes('404') || error.message.includes('Not Found')) {
-                // Si el 404 ocurre, significa que ya se había borrado del JSON. Forzamos la recarga del JSON y repintamos.
                 await this.booksModel.populate(); 
                 this.reloadBooksView(); 
                 this.view.showMessage(`El libro ID ${idToRemove} ya no existía en el servidor.`, 'info');

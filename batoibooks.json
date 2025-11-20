@@ -2125,5 +2125,102 @@
       "password": "1234"
     }
   ],
-  "books": []
+  "books": [
+    {
+      "id": "1d36",
+      "userId": 1,
+      "moduleCode": "0050",
+      "publisher": "fdgdgd",
+      "price": 432,
+      "pages": 34343,
+      "status": "good",
+      "comments": "fgss",
+      "photo": "",
+      "soldDate": ""
+    },
+    {
+      "id": "0584",
+      "userId": 1,
+      "moduleCode": "0061",
+      "publisher": "gggg",
+      "price": 44,
+      "pages": 34,
+      "status": "damaged",
+      "comments": "f",
+      "photo": "",
+      "soldDate": ""
+    },
+    {
+      "id": "31c0",
+      "userId": 1,
+      "moduleCode": "0016",
+      "publisher": "hh",
+      "price": 444,
+      "pages": 348,
+      "status": "good",
+      "comments": "f",
+      "photo": "",
+      "soldDate": ""
+    },
+    {
+      "id": "8377",
+      "userId": 1,
+      "moduleCode": "0493",
+      "publisher": "hhjjj",
+      "price": 87,
+      "pages": 4,
+      "status": "damaged",
+      "comments": "fpppp",
+      "photo": "",
+      "soldDate": ""
+    },
+    {
+      "id": "6397",
+      "userId": 1,
+      "moduleCode": "0831",
+      "publisher": "kk",
+      "price": 876,
+      "pages": 46,
+      "status": "damaged",
+      "comments": "fpppp",
+      "photo": "",
+      "soldDate": ""
+    },
+    {
+      "id": "0ba9",
+      "userId": 1,
+      "moduleCode": "3011cv",
+      "publisher": "hhkk",
+      "price": 83,
+      "pages": 98,
+      "status": "good",
+      "comments": "nmn",
+      "photo": "",
+      "soldDate": ""
+    },
+    {
+      "id": "5ea8",
+      "userId": 1,
+      "moduleCode": "0016",
+      "publisher": "fgjf",
+      "price": 6565,
+      "pages": 666,
+      "status": "good",
+      "comments": "fhh",
+      "photo": "",
+      "soldDate": ""
+    },
+    {
+      "id": "b911",
+      "userId": 1,
+      "moduleCode": "0011",
+      "publisher": "fgjf",
+      "price": 6565,
+      "pages": 666,
+      "status": "damaged",
+      "comments": "fhh",
+      "photo": "",
+      "soldDate": ""
+    }
+  ]
 }
