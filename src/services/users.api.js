@@ -47,15 +47,20 @@ export async function removeDBUser(idUser) {
         method: 'DELETE'
     };
 
-        let response = await fetch(url, options);
+    let response = await fetch(url, options);
 
-        if (!response.ok) {
-            let errorText = await response.text();
-            throw new Error(`Error al eliminar el usuario: ${response.status} ${response.statusText}. Detalle: ${errorText}`);
-        }
-        
+    if (!response.ok) {
+        let errorText = await response.text();
+        throw new Error(`Error al eliminar el usuario: ${response.status} ${response.statusText}. Detalle: ${errorText}`);
+    }
+    
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
         let delUser = await response.json();
         return delUser;
+    }
+    
+    return response.status; 
 }
 
 export async function changeDBUser(user) {
@@ -80,6 +85,7 @@ export async function changeDBUser(user) {
     return updatedUser; 
 }
 
+// 💡 FUNCIÓN DE API FALTANTE: changeDBUserPassword
 export async function changeDBUserPassword(idUser, newPassword) {
     let url = `http://localhost:3000/users/${idUser}`;
     
