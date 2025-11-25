@@ -85,7 +85,6 @@ export async function changeDBUser(user) {
     return updatedUser; 
 }
 
-// 💡 FUNCIÓN DE API FALTANTE: changeDBUserPassword
 export async function changeDBUserPassword(idUser, newPassword) {
     let url = `http://localhost:3000/users/${idUser}`;
     
