@@ -2163,18 +2163,6 @@
       "soldDate": ""
     },
     {
-      "id": "6e35",
-      "userId": 1,
-      "moduleCode": "0014",
-      "publisher": "fsf",
-      "price": 33,
-      "pages": 234,
-      "status": "good",
-      "comments": "rfwr",
-      "photo": "",
-      "soldDate": ""
-    },
-    {
       "id": "aae6",
       "userId": 1,
       "moduleCode": "0014",
@@ -2210,6 +2198,17 @@
       "comments": "red",
       "photo": "",
       "soldDate": ""
+    },
+    {
+      "userId": 1,
+      "moduleCode": "0031",
+      "publisher": "4353",
+      "price": 44,
+      "pages": 3,
+      "status": "damaged",
+      "comments": "nevo texto editado",
+      "id": "e862",
+      "photo": ""
     }
   ]
 }

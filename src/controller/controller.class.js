@@ -76,9 +76,14 @@ class Controller {
                 this.handleRemoveBook(bookId);
             }
             
-            if (target && target.classList.contains('btn.cart')) {
+            if (target && target.classList.contains('btn-cart')) {
                 const bookId = target.getAttribute('data-book-id');
                 this.handleAddToCart(bookId);
+            }
+            
+            if (target && target.classList.contains('btn-edit')) {
+                const bookId = target.getAttribute('data-book-id');
+                this.handleEditBook(bookId);
             }
         });
         
@@ -89,8 +94,24 @@ class Controller {
         }
     }
     
+    handleEditBook(bookId) {
+        const idToEdit = String(bookId); 
+        
+        try {
+            const book = this.booksModel.getBookById(idToEdit);
+            this.view.fillFormForEdit(book);
+            
+            this.view.showMessage(`Editando libro con ID: ${idToEdit}.`, 'info');
+
+        } catch (error) {
+            console.error("Error al preparar la edición:", error);
+            this.view.showMessage(`Error al editar: ${error.message}`, 'error');
+        }
+    }
+    
     handleReset() {
-        this.view.showMessage('Reiniciando la aplicación y recargando los datos...', 'info');
+        this.view.resetFormForAdd();
+        this.view.showMessage('Formulario reiniciado y recargando los datos...', 'info');
         this.init(); 
     }
     
@@ -118,7 +139,9 @@ class Controller {
 
     async handleSubmitBook(bookData) {
         try {
-            if (!bookData.id) { 
+            const isEditing = !!bookData.id; 
+            
+            if (!isEditing) { 
                 delete bookData.id;
             }
             
@@ -127,22 +150,26 @@ class Controller {
             }
             bookData.userId = Number(bookData.userId);
             
-            const newBook = await this.booksModel.addBook(bookData); 
+            let finalBook;
 
-            const moduleCodeString = String(newBook.moduleCode);
-            const moduleLiteral = this.modulesModel.getModuleByCode(moduleCodeString)?.cliteral || 'Módulo Desconocido';
-            const moduleName = `${moduleLiteral} (${newBook.moduleCode})`;
-            
-            this.view.renderBook(newBook, moduleName);
-            this.view.showMessage(`Libro con ID ${newBook.id} añadido correctamente.`, 'info'); 
-            
-            if (this.view.bookForm && typeof this.view.bookForm.reset === 'function') {
-                 this.view.bookForm.reset(); 
+            if (isEditing) {
+                finalBook = await this.booksModel.changeBook(bookData); 
+                this.view.showMessage(`Libro con ID ${finalBook.id} actualizado correctamente.`, 'success'); 
+            } else {
+                finalBook = await this.booksModel.addBook(bookData); 
+                this.view.showMessage(`Libro con ID ${finalBook.id} añadido correctamente.`, 'success');
             }
 
+            const moduleCodeString = String(finalBook.moduleCode);
+            const moduleLiteral = this.modulesModel.getModuleByCode(moduleCodeString)?.cliteral || 'Módulo Desconocido';
+            const moduleName = `${moduleLiteral} (${finalBook.moduleCode})`;
+            
+            this.view.renderBook(finalBook, moduleName);
+            this.view.resetFormForAdd();
+
         } catch (error) {
-            console.error("Error al añadir el libro:", error);
-            this.view.showMessage(`Error al añadir el libro: ${error.message}`, 'error');
+            console.error(`Error al ${isEditing ? 'editar' : 'añadir'} el libro:`, error);
+            this.view.showMessage(`Error al ${isEditing ? 'editar' : 'añadir'} el libro: ${error.message}`, 'error');
         }
     }
 

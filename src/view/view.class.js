@@ -8,6 +8,11 @@ class View {
         this.messagesContainer = document.querySelector('#messages-container'); 
         this.messages = document.querySelector('#messages-alert'); 
         
+        this.formTitle = this.form ? this.form.querySelector('h2') : null; 
+        this.idInputGroup = this.bookForm.querySelector('.hidden-id-group'); 
+        this.idInput = this.bookForm.querySelector('#bookId'); 
+        this.submitButton = this.bookForm ? this.bookForm.querySelector('button[type="submit"]') : null;
+        
         this.removeInput = document.querySelector('#remove-id');
         this.removeButton = document.querySelector('#remove-button');
         this.resetButton = document.querySelector('#reset');
@@ -37,7 +42,17 @@ class View {
         const data = {};
 
         for (const [key, value] of formData.entries()) {
-            data[key] = value;
+            const dataKey = (key === 'bookId' && this.idInput && this.idInput.disabled) ? 'id' : key;
+            data[dataKey] = value;
+        }
+
+        if (this.idInput && this.idInput.disabled) {
+            data.id = this.idInput.value; 
+        } else {
+            if (data.id === "" || data.bookId === "") {
+                delete data.id;
+                delete data.bookId; 
+            }
         }
 
         data.price = parseFloat(data.price) || 0;
@@ -45,9 +60,66 @@ class View {
         
         data.comments = data.comments || "";
         data.photo = data.photo || ""; 
-        data.soldDate = "";
+        
+        if (data.photo === undefined) data.photo = ""; 
+        
+        if (data.soldDate) delete data.soldDate; 
         
         return data;
+    }
+
+    fillFormForEdit(book) {
+        if (this.formTitle) {
+            this.formTitle.textContent = 'Editar libro';
+        }
+
+        if (this.idInputGroup && this.idInput) {
+            this.idInputGroup.style.display = 'grid'; 
+            this.idInput.value = book.id;
+            this.idInput.disabled = true; 
+        }
+        
+        this.bookForm.querySelector('#userId').value = book.userId;
+        this.bookForm.querySelector('#moduleCode').value = book.moduleCode;
+        this.bookForm.querySelector('#publisher').value = book.publisher;
+        this.bookForm.querySelector('#price').value = book.price;
+        this.bookForm.querySelector('#pages').value = book.pages;
+        
+        const photoInput = this.bookForm.querySelector('#photo');
+        if (photoInput) photoInput.value = book.photo || ""; 
+
+        this.bookForm.querySelector('#comments').value = book.comments;
+
+        const statusInputs = this.bookForm.querySelectorAll('input[name="status"]');
+        statusInputs.forEach(input => {
+            input.checked = (input.value === book.status);
+        });
+        
+        if (this.submitButton) {
+            this.submitButton.textContent = 'Guardar Cambios';
+        }
+        
+        this.form.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    resetFormForAdd() {
+        if (this.formTitle) {
+            this.formTitle.textContent = 'Añadir Nuevo Libro'; 
+        }
+        
+        if (this.idInputGroup && this.idInput) {
+            this.idInputGroup.style.display = 'none'; 
+            this.idInput.value = ''; 
+            this.idInput.disabled = false; 
+        }
+        
+        if (this.submitButton) {
+            this.submitButton.textContent = 'Añadir';
+        }
+        
+        if (typeof this.bookForm.reset === 'function') {
+             this.bookForm.reset(); 
+        }
     }
 
     renderBook(book, moduleName) {
@@ -58,9 +130,13 @@ class View {
             
         const imgSrc = book.photo && book.photo !== "" ? book.photo : 'assets/default-book.png';
 
-        const cardDiv = document.createElement('div');
-        cardDiv.classList.add('cardBook');
-        cardDiv.setAttribute('data-book-id', book.id); 
+        const existingCard = this.booksList.querySelector(`[data-book-id="${book.id}"]`);
+        
+        const cardDiv = existingCard || document.createElement('div');
+        if (!existingCard) {
+            cardDiv.classList.add('cardBook');
+            cardDiv.setAttribute('data-book-id', book.id);
+        }
 
         cardDiv.innerHTML = `
             <div class="card-img">
@@ -76,11 +152,11 @@ class View {
                 <h4>${book.price} €</h4>
 
                 <div class="card-actions-container">
-                    <button class="btn.cart" data-book-id="${book.id}">
+                    <button class="btn-cart" data-book-id="${book.id}">
                         <span class="material-icons">add_shopping_cart</span>
                     </button>
 
-                    <button>
+                    <button class="btn-edit" data-book-id="${book.id}">
                         <span class="material-icons">edit</span>
                     </button>
 
@@ -90,8 +166,10 @@ class View {
                 </div>          
             </div>
         `;
-
-        this.booksList.appendChild(cardDiv);
+        
+        if (!existingCard) {
+            this.booksList.appendChild(cardDiv);
+        }
     }
 
     removeBook(bookId) {
