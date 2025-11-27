@@ -2,12 +2,14 @@ import Books from '../model/books.class.js';
 import Modules from '../model/modules.class.js';
 import Users from '../model/users.class.js'; 
 import View from '../view/view.class.js';
+import Cart from '../model/cart.class.js';
 
 class Controller {
     constructor() {
         this.booksModel = new Books();
         this.modulesModel = new Modules();
         this.usersModel = new Users(); 
+        this.cartModel = new Cart(); 
         this.view = new View();
         
         this.listenersSet = false; 
@@ -18,6 +20,7 @@ class Controller {
             await this.modulesModel.populate();
             await this.usersModel.populate();
             await this.booksModel.populate();
+            await this.cartModel.populate(); 
 
             const modules = this.modulesModel.getModules();
             if (modules.length > 0) {
@@ -26,6 +29,8 @@ class Controller {
 
             const books = this.booksModel.getBooks();
             this.renderAllBooks(books);
+            
+            console.log("Carrito inicializado:", this.cartModel.toString()); 
 
             if (!this.listenersSet) {
                 this.setListeners(); 
@@ -64,10 +69,16 @@ class Controller {
         });
 
         this.view.booksList.addEventListener('click', (event) => {
-            const target = event.target;
-            if (target.classList.contains('btn-remove')) {
+            const target = event.target.closest('button'); 
+
+            if (target && target.classList.contains('btn-remove')) {
                 const bookId = target.getAttribute('data-book-id');
                 this.handleRemoveBook(bookId);
+            }
+            
+            if (target && target.classList.contains('btn.cart')) {
+                const bookId = target.getAttribute('data-book-id');
+                this.handleAddToCart(bookId);
             }
         });
         
@@ -87,10 +98,30 @@ class Controller {
         const books = this.booksModel.getBooks();
         this.renderAllBooks(books);
     }
+    
+    handleAddToCart(bookId) {
+        const idToAdd = String(bookId); 
+        
+        try {
+            const book = this.booksModel.getBookById(idToAdd);
+
+            this.cartModel.addItem(book);
+            
+            this.view.showMessage(`Libro ${idToAdd} añadido al carrito. Total: ${this.cartModel.data.length} libros.`, 'success');
+            console.log(this.cartModel.toString());
+
+        } catch (error) {
+            console.error("Error al añadir al carrito:", error);
+            this.view.showMessage(`Error al añadir al carrito: ${error.message}`, 'error');
+        }
+    }
 
     async handleSubmitBook(bookData) {
         try {
-            if (bookData.id) delete bookData.id;
+            if (!bookData.id) { 
+                delete bookData.id;
+            }
+            
             if (!bookData.userId || bookData.userId === '') {
                  bookData.userId = 1; 
             }

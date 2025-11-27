@@ -74,7 +74,20 @@ class View {
                 <p>${saleInfo}</p> 
                 <p>${book.comments || 'Sin comentarios.'}</p>
                 <h4>${book.price} €</h4>
-                <button class="btn-remove" data-book-id="${book.id}">Eliminar</button> 
+
+                <div class="card-actions-container">
+                    <button class="btn.cart" data-book-id="${book.id}">
+                        <span class="material-icons">add_shopping_cart</span>
+                    </button>
+
+                    <button>
+                        <span class="material-icons">edit</span>
+                    </button>
+
+                    <button class="btn-remove" data-book-id="${book.id}">
+                        <span class="material-icons">delete</span>
+                    </button>  
+                </div>          
             </div>
         `;
 

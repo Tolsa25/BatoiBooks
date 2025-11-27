@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BatoiBooks Kevin</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="./src/style.css">
 </head>
 
@@ -39,6 +40,12 @@
             <section id="form-section" class="content-section">
                 <h2>Añadir Nuevo Libro</h2>
                 <form id="addBookForm">
+                   
+                    <div class="form-group hidden-id-group"> 
+                        <label for="bookId">ID: </label>
+                        <input type="text" id="bookId" name="bookId">
+                    </div>
+
                     <input type="hidden" id="userId" name="userId" value="1">
 
                     <div class="form-group">
