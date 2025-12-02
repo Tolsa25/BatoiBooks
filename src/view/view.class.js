@@ -68,6 +68,50 @@ class View {
         return data;
     }
 
+    validateForm() {
+        const formData = new FormData(this.bookForm);
+        const data = {};
+        for (const [key, value] of formData.entries()) {
+             data[key] = value;
+        }
+        
+        const errors = {};
+
+        if (!data.moduleCode || data.moduleCode === "") {
+            errors.moduleCode = "El código de módulo (idModule) es obligatorio.";
+        }
+
+        if (!data.publisher || data.publisher.trim() === "") {
+            errors.publisher = "El campo editorial (publisher) es obligatorio.";
+        }
+
+        const priceValue = parseFloat(data.price);
+        if (data.price === "" || isNaN(priceValue)) {
+            errors.price = "El precio es obligatorio y debe ser un valor numérico.";
+        } else if (priceValue < 0) {
+            errors.price = "El precio debe ser mayor o igual que 0.";
+        }
+        
+        const pagesValue = parseInt(data.pages);
+        if (data.pages === "" || isNaN(pagesValue)) {
+            errors.pages = "El número de páginas es obligatorio y debe ser un valor numérico entero.";
+        } else if (pagesValue < 0) {
+            errors.pages = "El número de páginas debe ser mayor o igual que 0.";
+        } else if (data.pages.includes('.')) {
+            errors.pages = "El número de páginas debe ser un número entero sin decimales.";
+        }
+        
+        if (!data.status || data.status === "") {
+            errors.status = "El estado (status) es obligatorio.";
+        }
+
+        if (Object.keys(errors).length === 0) {
+            return true;
+        } else {
+            return errors;
+        }
+    }
+
     fillFormForEdit(book) {
         if (this.formTitle) {
             this.formTitle.textContent = 'Editar libro';

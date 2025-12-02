@@ -2209,6 +2209,17 @@
       "comments": "nevo texto editado",
       "id": "e862",
       "photo": ""
+    },
+    {
+      "id": "d6d6",
+      "userId": 1,
+      "moduleCode": "0011",
+      "publisher": "dada",
+      "price": 0.01,
+      "pages": 1,
+      "status": "good",
+      "comments": "",
+      "photo": ""
     }
   ]
 }
