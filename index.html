@@ -20,6 +20,7 @@
             <ul>
                 <li><a href="#list-section">Ver Libros</a></li>
                 <li><a href="#form-section">Añadir Libro</a></li>
+                <li><a href="#cart-section">Carrito</a></li>
                 <li><a href="#about-section">Acerca de...</a></li>
             </ul>
         </nav>
@@ -40,8 +41,8 @@
             <section id="form-section" class="content-section">
                 <h2>Añadir Nuevo Libro</h2>
                 <form id="addBookForm">
-                   
-                    <div class="form-group hidden-id-group"> 
+
+                    <div class="form-group hidden-id-group">
                         <label for="bookId">ID: </label>
                         <input type="text" id="bookId" name="bookId">
                     </div>
@@ -73,7 +74,7 @@
                         <div class="radio-group">
                             <label for="status-good">Buen estado</label>
                             <input type="radio" id="status-good" name="status" value="good" required>
-                            
+
                             <label for="status-damaged">Dañado</label>
                             <input type="radio" id="status-damaged" name="status" value="damaged">
                         </div>
@@ -89,6 +90,16 @@
                         <button type="reset" id="reset">Reset</button>
                     </div>
                 </form>
+            </section>
+
+            <section id="cart-section" class="content-section">
+                <h2>Carrito de la compra</h2>
+                <div id="cart-container" class="books-list-grid">
+                </div>
+                <div class="cart-actions" style="margin-top: 20px; text-align: center;">
+                    <button id="btn-order" class="active">Realizar compra</button>
+                    <button id="btn-empty-cart">Vaciar carrito</button>
+                </div>
             </section>
 
             <section id="about-section" class="content-section">

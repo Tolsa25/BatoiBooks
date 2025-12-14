@@ -37,6 +37,10 @@ class Controller {
                 this.listenersSet = true;
             }
 
+            // Inicializar vista basada en hash actual o default
+            const currentHash = window.location.hash || '#list-section';
+            this.handleNavigation(currentHash);
+
         } catch (error) {
             console.error("Error al inicializar la aplicación:", error);
             if (error.message.includes('fetch')) {
@@ -106,6 +110,48 @@ class Controller {
                 const bookId = target.getAttribute('data-book-id');
                 this.handleEditBook(bookId);
             }
+
+        });
+
+        if (this.view.cartList) {
+            this.view.cartList.addEventListener('click', (event) => {
+                const target = event.target.closest('button');
+                if (target && target.classList.contains('btn-remove-cart')) {
+                    const bookId = target.getAttribute('data-book-id');
+                    this.handleRemoveFromCart(bookId);
+                }
+            });
+        }
+
+        if (this.view.btnOrder) {
+            this.view.btnOrder.addEventListener('click', () => {
+                if (this.cartModel.data.length === 0) {
+                    this.view.showMessage('El carrito está vacío.', 'error');
+                    return;
+                }
+                this.cartModel.empty();
+                this.view.renderCart(this.cartModel);
+                this.view.showMessage('Compra realizada con éxito. El carrito se ha vaciado.', 'success');
+            });
+        }
+
+        if (this.view.btnEmptyCart) {
+            this.view.btnEmptyCart.addEventListener('click', () => {
+                if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
+                    this.cartModel.empty();
+                    this.view.renderCart(this.cartModel);
+                    this.view.showMessage('Se ha vaciado el carrito.', 'info');
+                }
+            });
+        }
+
+        
+        const navLinks = document.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                this.handleNavigation(href);
+            });
         });
 
         if (this.view.resetButton) {
@@ -218,6 +264,36 @@ class Controller {
 
             console.error("Error al eliminar el libro:", error);
             this.view.showMessage(`Error al eliminar el libro: ${error.message}`, 'error');
+        }
+    }
+
+    handleRemoveFromCart(bookId) {
+        try {
+            this.cartModel.removeItem(bookId);
+            this.view.renderCart(this.cartModel);
+            this.view.showMessage(`Libro eliminado del carrito.`, 'info');
+        } catch (error) {
+            this.view.showMessage(error.message, 'error');
+        }
+    }
+
+    handleNavigation(hash) {
+        if (this.view.listSection) this.view.listSection.style.display = 'none';
+        if (this.view.formSection) this.view.formSection.style.display = 'none';
+        if (this.view.aboutSection) this.view.aboutSection.style.display = 'none';
+        if (this.view.cartSection) this.view.cartSection.style.display = 'none';
+
+        if (hash === '#list-section') {
+            if (this.view.listSection) this.view.listSection.style.display = 'block';
+        } else if (hash === '#form-section') {
+            if (this.view.formSection) this.view.formSection.style.display = 'block';
+        } else if (hash === '#about-section') {
+            if (this.view.aboutSection) this.view.aboutSection.style.display = 'block';
+        } else if (hash === '#cart-section') {
+            if (this.view.cartSection) {
+                this.view.cartSection.style.display = 'block';
+                this.view.renderCart(this.cartModel);
+            }
         }
     }
 }

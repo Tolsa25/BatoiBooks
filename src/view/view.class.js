@@ -1,34 +1,43 @@
 class View {
     constructor() {
-        this.booksList = document.querySelector('#list'); 
-        this.about = document.querySelector('#acercaDe'); 
-        this.form = document.querySelector('#form-section'); 
-        this.bookForm = document.querySelector('#addBookForm'); 
-        this.moduleSelect = document.querySelector('#moduleCode'); 
-        this.messagesContainer = document.querySelector('#messages-container'); 
-        this.messages = document.querySelector('#messages-alert'); 
-        
-        this.formTitle = this.form ? this.form.querySelector('h2') : null; 
-        this.idInputGroup = this.bookForm.querySelector('.hidden-id-group'); 
-        this.idInput = this.bookForm.querySelector('#bookId'); 
+        this.booksList = document.querySelector('#list');
+        this.about = document.querySelector('#acercaDe');
+        this.form = document.querySelector('#form-section');
+        this.bookForm = document.querySelector('#addBookForm');
+        this.moduleSelect = document.querySelector('#moduleCode');
+        this.messagesContainer = document.querySelector('#messages-container');
+        this.messages = document.querySelector('#messages-alert');
+
+        this.formTitle = this.form ? this.form.querySelector('h2') : null;
+        this.idInputGroup = this.bookForm.querySelector('.hidden-id-group');
+        this.idInput = this.bookForm.querySelector('#bookId');
         this.submitButton = this.bookForm ? this.bookForm.querySelector('button[type="submit"]') : null;
-        
+
         this.removeInput = document.querySelector('#remove-id');
         this.removeButton = document.querySelector('#remove-button');
         this.resetButton = document.querySelector('#reset');
-        
-        this.messages.style.display = 'none'; 
+
+        this.cartList = document.querySelector('#cart-container');
+        this.cartSection = document.querySelector('#cart-section');
+        this.listSection = document.querySelector('#list-section');
+        this.formSection = document.querySelector('#form-section');
+        this.aboutSection = document.querySelector('#about-section');
+
+        this.btnOrder = document.querySelector('#btn-order');
+        this.btnEmptyCart = document.querySelector('#btn-empty-cart');
+
+        this.messages.style.display = 'none';
     }
 
     completeModuleSelect(modulesArray) {
         const defaultOption = this.moduleSelect.querySelector('option[value=""]');
         this.moduleSelect.innerHTML = '';
         if (defaultOption) {
-             this.moduleSelect.appendChild(defaultOption);
+            this.moduleSelect.appendChild(defaultOption);
         } else {
-             this.moduleSelect.innerHTML = `<option value="" disabled selected>Selecciona un módulo</option>`;
+            this.moduleSelect.innerHTML = `<option value="" disabled selected>Selecciona un módulo</option>`;
         }
-        
+
         modulesArray.forEach(module => {
             const option = document.createElement('option');
             option.value = module.code;
@@ -47,24 +56,24 @@ class View {
         }
 
         if (this.idInput && this.idInput.disabled) {
-            data.id = this.idInput.value; 
+            data.id = this.idInput.value;
         } else {
             if (data.id === "" || data.bookId === "") {
                 delete data.id;
-                delete data.bookId; 
+                delete data.bookId;
             }
         }
 
         data.price = parseFloat(data.price) || 0;
         data.pages = parseInt(data.pages) || 0;
-        
+
         data.comments = data.comments || "";
-        data.photo = data.photo || ""; 
-        
-        if (data.photo === undefined) data.photo = ""; 
-        
-        if (data.soldDate) delete data.soldDate; 
-        
+        data.photo = data.photo || "";
+
+        if (data.photo === undefined) data.photo = "";
+
+        if (data.soldDate) delete data.soldDate;
+
         return data;
     }
 
@@ -72,9 +81,9 @@ class View {
         const formData = new FormData(this.bookForm);
         const data = {};
         for (const [key, value] of formData.entries()) {
-             data[key] = value;
+            data[key] = value;
         }
-        
+
         const errors = {};
 
         if (!data.moduleCode || data.moduleCode === "") {
@@ -91,7 +100,7 @@ class View {
         } else if (priceValue < 0) {
             errors.price = "El precio debe ser mayor o igual que 0.";
         }
-        
+
         const pagesValue = parseInt(data.pages);
         if (data.pages === "" || isNaN(pagesValue)) {
             errors.pages = "El número de páginas es obligatorio y debe ser un valor numérico entero.";
@@ -100,7 +109,7 @@ class View {
         } else if (data.pages.includes('.')) {
             errors.pages = "El número de páginas debe ser un número entero sin decimales.";
         }
-        
+
         if (!data.status || data.status === "") {
             errors.status = "El estado (status) es obligatorio.";
         }
@@ -118,19 +127,19 @@ class View {
         }
 
         if (this.idInputGroup && this.idInput) {
-            this.idInputGroup.style.display = 'grid'; 
+            this.idInputGroup.style.display = 'grid';
             this.idInput.value = book.id;
-            this.idInput.disabled = true; 
+            this.idInput.disabled = true;
         }
-        
+
         this.bookForm.querySelector('#userId').value = book.userId;
         this.bookForm.querySelector('#moduleCode').value = book.moduleCode;
         this.bookForm.querySelector('#publisher').value = book.publisher;
         this.bookForm.querySelector('#price').value = book.price;
         this.bookForm.querySelector('#pages').value = book.pages;
-        
+
         const photoInput = this.bookForm.querySelector('#photo');
-        if (photoInput) photoInput.value = book.photo || ""; 
+        if (photoInput) photoInput.value = book.photo || "";
 
         this.bookForm.querySelector('#comments').value = book.comments;
 
@@ -138,44 +147,44 @@ class View {
         statusInputs.forEach(input => {
             input.checked = (input.value === book.status);
         });
-        
+
         if (this.submitButton) {
             this.submitButton.textContent = 'Guardar Cambios';
         }
-        
+
         this.form.scrollIntoView({ behavior: 'smooth' });
     }
 
     resetFormForAdd() {
         if (this.formTitle) {
-            this.formTitle.textContent = 'Añadir Nuevo Libro'; 
+            this.formTitle.textContent = 'Añadir Nuevo Libro';
         }
-        
+
         if (this.idInputGroup && this.idInput) {
-            this.idInputGroup.style.display = 'none'; 
-            this.idInput.value = ''; 
-            this.idInput.disabled = false; 
+            this.idInputGroup.style.display = 'none';
+            this.idInput.value = '';
+            this.idInput.disabled = false;
         }
-        
+
         if (this.submitButton) {
             this.submitButton.textContent = 'Añadir';
         }
-        
+
         if (typeof this.bookForm.reset === 'function') {
-             this.bookForm.reset(); 
+            this.bookForm.reset();
         }
     }
 
     renderBook(book, moduleName) {
 
-        const saleInfo = book.soldDate && book.soldDate !== "" 
-            ? `Vendido el ${new Date(book.soldDate).toLocaleDateString()}` 
+        const saleInfo = book.soldDate && book.soldDate !== ""
+            ? `Vendido el ${new Date(book.soldDate).toLocaleDateString()}`
             : `En venta`;
-            
+
         const imgSrc = book.photo && book.photo !== "" ? book.photo : 'assets/default-book.png';
 
         const existingCard = this.booksList.querySelector(`[data-book-id="${book.id}"]`);
-        
+
         const cardDiv = existingCard || document.createElement('div');
         if (!existingCard) {
             cardDiv.classList.add('cardBook');
@@ -210,7 +219,7 @@ class View {
                 </div>          
             </div>
         `;
-        
+
         if (!existingCard) {
             this.booksList.appendChild(cardDiv);
         }
@@ -228,7 +237,7 @@ class View {
     showMessage(message, type = 'info') {
         const alertType = type === 'error' ? 'danger' : (type === 'success' ? 'success' : 'info');
 
-        this.messages.style.display = 'flex'; 
+        this.messages.style.display = 'flex';
 
         this.messages.className = `tipoRecibido alert alert-${alertType} alert-dismissible`;
         this.messages.setAttribute('role', 'alert');
