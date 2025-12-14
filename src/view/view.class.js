@@ -26,6 +26,9 @@ class View {
         this.btnOrder = document.querySelector('#btn-order');
         this.btnEmptyCart = document.querySelector('#btn-empty-cart');
 
+        this.btnOrder = document.querySelector('#btn-order');
+        this.btnEmptyCart = document.querySelector('#btn-empty-cart');
+
         this.messages.style.display = 'none';
     }
 
@@ -173,6 +176,67 @@ class View {
         if (typeof this.bookForm.reset === 'function') {
             this.bookForm.reset();
         }
+    }
+
+    renderCart(cart, moduleNameResolver) {
+        this.cartList.innerHTML = ''; 
+
+        if (cart.data.length === 0) {
+            this.cartList.innerHTML = '<p>El carrito está vacío.</p>';
+            return;
+        }
+
+        cart.data.forEach(book => {
+            const cardDiv = document.createElement('div');
+            cardDiv.classList.add('cardBook');
+            cardDiv.setAttribute('data-book-id', book.id);
+
+            const imgSrc = book.photo && book.photo !== "" ? book.photo : 'assets/default-book.png';
+
+            let moduleName = "Módulo Desconocido";
+            if (moduleNameResolver) {
+                moduleName = moduleNameResolver(book.moduleCode);
+            }
+
+            const saleInfo = book.soldDate && book.soldDate !== ""
+                ? `Vendido el ${new Date(book.soldDate).toLocaleDateString()}`
+                : `En venta`;
+
+            cardDiv.innerHTML = `
+                <div class="card-img">
+                    <img src="${imgSrc}" alt="Libro: ${book.id}">
+                </div>
+                <div class="card-body">
+                    <h3>${moduleName} (${book.id})</h3> 
+                    <h4>${book.publisher}</h4>
+                    <p>${book.pages} páginas</p>
+                    <p>Estado: ${book.status}</p>
+                    <p>${saleInfo}</p> 
+                    <p>${book.comments || 'Sin comentarios.'}</p>
+                    <h4>${book.price} €</h4>
+
+                    <div class="card-actions-container">
+                        <button class="btn-remove-cart" data-book-id="${book.id}">
+                            <span class="material-icons">delete</span> Quitar
+                        </button>  
+                    </div>          
+                </div>
+            `;
+            this.cartList.appendChild(cardDiv);
+        });
+
+        
+        const totalDiv = document.createElement('div');
+        totalDiv.style.gridColumn = "1 / -1";
+        totalDiv.style.textAlign = "right";
+        totalDiv.style.fontSize = "1.5rem";
+        totalDiv.style.fontWeight = "bold";
+        totalDiv.style.padding = "20px";
+
+        const total = cart.data.reduce((sum, b) => sum + b.price, 0).toFixed(2);
+        totalDiv.textContent = `Total: ${total} €`;
+
+        this.cartList.appendChild(totalDiv);
     }
 
     renderBook(book, moduleName) {

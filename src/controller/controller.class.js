@@ -30,6 +30,8 @@ class Controller {
             const books = this.booksModel.getBooks();
             this.renderAllBooks(books);
 
+            this.view.updateCartMenu(this.cartModel.data.length);
+
             console.log("Carrito inicializado:", this.cartModel.toString());
 
             if (!this.listenersSet) {
@@ -37,7 +39,6 @@ class Controller {
                 this.listenersSet = true;
             }
 
-            // Inicializar vista basada en hash actual o default
             const currentHash = window.location.hash || '#list-section';
             this.handleNavigation(currentHash);
 
@@ -131,6 +132,7 @@ class Controller {
                 }
                 this.cartModel.empty();
                 this.view.renderCart(this.cartModel);
+                this.view.updateCartMenu(this.cartModel.data.length); 
                 this.view.showMessage('Compra realizada con éxito. El carrito se ha vaciado.', 'success');
             });
         }
@@ -140,12 +142,13 @@ class Controller {
                 if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
                     this.cartModel.empty();
                     this.view.renderCart(this.cartModel);
+                    this.view.updateCartMenu(this.cartModel.data.length); 
                     this.view.showMessage('Se ha vaciado el carrito.', 'info');
                 }
             });
         }
 
-        
+
         const navLinks = document.querySelectorAll('nav a');
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
@@ -195,6 +198,7 @@ class Controller {
 
             this.cartModel.addItem(book);
 
+            this.view.updateCartMenu(this.cartModel.data.length); 
             this.view.showMessage(`Libro ${idToAdd} añadido al carrito. Total: ${this.cartModel.data.length} libros.`, 'success');
             console.log(this.cartModel.toString());
 
