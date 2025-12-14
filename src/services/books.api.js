@@ -1,9 +1,9 @@
 export async function getDBBooks() {
     let response = await fetch('http://localhost:3000/books', {
-        cache: 'no-store' 
+        cache: 'no-store'
     });
 
-    if(!response.ok){
+    if (!response.ok) {
         let errorText = await response.text();
         throw new Error(`Error al obtener los libros: ${response.status} ${response.statusText}. Detalle: ${errorText}`);
     }
@@ -11,13 +11,13 @@ export async function getDBBooks() {
     return tabla;
 }
 
-export async function getDBBook(id){
-   let url = `http://localhost:3000/books/${id}`;
-   let response = await fetch(url, {
-       cache: 'no-store'
-   });
+export async function getDBBook(id) {
+    let url = `http://localhost:3000/books/${id}`;
+    let response = await fetch(url, {
+        cache: 'no-store'
+    });
 
-   if(!response.ok){
+    if (!response.ok) {
         let errorText = await response.text();
         throw new Error(`Error al obtener el libro: ${response.status} ${response.statusText}. Detalle: ${errorText}`);
     }
@@ -28,7 +28,7 @@ export async function getDBBook(id){
 export async function addDBBook(newBook) {
     let url = 'http://localhost:3000/books';
     let options = {
-        method: 'POST', 
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -41,7 +41,7 @@ export async function addDBBook(newBook) {
         let errorText = await response.text();
         throw new Error(`Error al crear el libro: ${response.status} ${response.statusText}. Detalle: ${errorText}`);
     }
-    
+
     let createdBook = await response.json();
     return createdBook;
 }
@@ -55,9 +55,9 @@ export async function removeDBBook(idBook) {
     let response = await fetch(url, options);
 
     if (response.ok || response.status === 204 || response.status === 404) {
-        return null; 
+        return null;
     }
-  
+
     let errorText = await response.text();
     throw new Error(`Error al eliminar el libro: ${response.status} ${response.statusText}. Detalle: ${errorText}`);
 }
@@ -65,7 +65,7 @@ export async function removeDBBook(idBook) {
 export async function changeDBBook(book) {
     let url = `http://localhost:3000/books/${book.id}`;
     let options = {
-        method: 'PUT', 
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -78,7 +78,22 @@ export async function changeDBBook(book) {
         let errorText = await response.text();
         throw new Error(`Error al actualizar el libro (ID: ${book.id}): ${response.status} ${response.statusText}. Detalle: ${errorText}`);
     }
-    
+
     let updatedBook = await response.json();
     return updatedBook;
+}
+
+export async function checkBookExists(userId, moduleCode) {
+    let url = `http://localhost:3000/books?userId=${userId}&moduleCode=${moduleCode}`;
+    let response = await fetch(url, {
+        cache: 'no-store'
+    });
+
+    if (!response.ok) {
+        let errorText = await response.text();
+        throw new Error(`Error al comprobar si existe el libro: ${response.status} ${response.statusText}. Detalle: ${errorText}`);
+    }
+
+    let searchResults = await response.json();
+    return searchResults.length > 0;
 }

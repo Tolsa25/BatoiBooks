@@ -1,5 +1,5 @@
 import Book from './book.class';
-import { getDBBooks, addDBBook, removeDBBook, changeDBBook } from '../services/books.api.js'; 
+import { getDBBooks, addDBBook, removeDBBook, changeDBBook, checkBookExists } from '../services/books.api.js';
 
 class Books {
     constructor() {
@@ -7,13 +7,13 @@ class Books {
     }
 
     async populate() {
-        const dataInicial = await getDBBooks(); 
+        const dataInicial = await getDBBooks();
         this.data = dataInicial.map(bookData => new Book(bookData));
     }
 
     async addBook(bookData) {
-        const createdBook = await addDBBook(bookData); 
-        
+        const createdBook = await addDBBook(bookData);
+
         const newBookInstance = new Book(createdBook);
 
         this.data.push(newBookInstance);
@@ -24,10 +24,10 @@ class Books {
         const index = this.data.findIndex(book => book.id === id);
 
         if (index === -1) {
-            throw new Error(`Libro con id ${id} no encontrado localmente.`); 
+            throw new Error(`Libro con id ${id} no encontrado localmente.`);
         }
 
-        await removeDBBook(id); 
+        await removeDBBook(id);
         this.data.splice(index, 1);
     }
 
@@ -51,7 +51,7 @@ class Books {
     }
 
     getBooks() {
-        return this.data; 
+        return this.data;
     }
 
     getBookById(bookId) {
@@ -70,8 +70,8 @@ class Books {
         return encontrarIndice;
     }
 
-    bookExists(userId, moduleCode) {
-        return this.data.some(book => book.userId === userId && book.moduleCode === moduleCode);
+    async bookExists(userId, moduleCode) {
+        return await checkBookExists(userId, moduleCode);
     }
 
     booksFromUser(userId) {

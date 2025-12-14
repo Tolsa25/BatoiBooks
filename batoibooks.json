@@ -2220,6 +2220,17 @@
       "status": "good",
       "comments": "",
       "photo": ""
+    },
+    {
+      "id": "876b",
+      "userId": 1,
+      "moduleCode": "0344",
+      "publisher": "test",
+      "price": 1,
+      "pages": 1,
+      "status": "good",
+      "comments": "",
+      "photo": ""
     }
   ]
 }

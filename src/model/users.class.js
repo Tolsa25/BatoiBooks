@@ -66,14 +66,14 @@ class Users {
     }
 
     async getUserById(userId) {
-    const stringUserId = String(userId); 
-    const user = this.data.find(user => String(user.id) === stringUserId);
-    
-    if (!user) {
-        throw new Error(`Usuario con ID ${userId} no existe`);
+        const stringUserId = String(userId); 
+        const user = this.data.find(user => String(user.id) === stringUserId);
+        
+        if (!user) {
+            throw new Error(`Usuario con ID ${userId} no existe`);
+        }
+        return user;
     }
-    return user;
-}
 
     getUserIndexById(userId) {
         const stringUserId = String(userId); 
