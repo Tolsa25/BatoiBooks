@@ -25,7 +25,34 @@ export async function getDBBook(id) {
     return libro;
 }
 
+function validateBook(book) {
+    if (!book.moduleCode) {
+        throw new Error("El módulo es obligatorio");
+    }
+    if (!book.publisher || book.publisher.trim() === "") {
+        throw new Error("La editorial es obligatoria");
+    }
+    if (book.publisher.length > 50) {
+        throw new Error("La editorial no puede tener más de 50 caracteres");
+    }
+    if (!book.price || isNaN(book.price) || Number(book.price) < 0.01) {
+        throw new Error("El precio debe ser un número mayor o igual a 0.01");
+    }
+    if (!book.pages || isNaN(book.pages) || Number(book.pages) < 1) {
+        throw new Error("El número de páginas debe ser mayor o igual a 1");
+    }
+    if (!book.status) {
+        throw new Error("El estado es obligatorio");
+    }
+    if (book.comments && book.comments.length > 500) {
+        throw new Error("Los comentarios no pueden exceder los 500 caracteres");
+    }
+}
+
 export async function addDBBook(newBook) {
+
+    validateBook(newBook);
+
     let url = 'http://localhost:3000/books';
     let options = {
         method: 'POST',
@@ -63,6 +90,9 @@ export async function removeDBBook(idBook) {
 }
 
 export async function changeDBBook(book) {
+
+    validateBook(book);
+
     let url = `http://localhost:3000/books/${book.id}`;
     let options = {
         method: 'PUT',

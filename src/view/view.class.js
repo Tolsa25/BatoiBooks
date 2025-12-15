@@ -27,7 +27,10 @@ class View {
         this.btnEmptyCart = document.querySelector('#btn-empty-cart');
 
         this.btnOrder = document.querySelector('#btn-order');
+        this.btnOrder = document.querySelector('#btn-order');
         this.btnEmptyCart = document.querySelector('#btn-empty-cart');
+
+        this.cartLink = document.querySelector('nav a[href="#cart-section"]');
 
         this.messages.style.display = 'none';
     }
@@ -179,7 +182,7 @@ class View {
     }
 
     renderCart(cart, moduleNameResolver) {
-        this.cartList.innerHTML = ''; 
+        this.cartList.innerHTML = '';
 
         if (cart.data.length === 0) {
             this.cartList.innerHTML = '<p>El carrito está vacío.</p>';
@@ -225,7 +228,7 @@ class View {
             this.cartList.appendChild(cardDiv);
         });
 
-        
+
         const totalDiv = document.createElement('div');
         totalDiv.style.gridColumn = "1 / -1";
         totalDiv.style.textAlign = "right";
@@ -321,6 +324,12 @@ class View {
                     this.messages.className = 'tipoRecibido';
                 }
             }, 3000);
+        }
+    }
+
+    updateCartMenu(count) {
+        if (this.cartLink) {
+            this.cartLink.textContent = `Carrito (${count})`;
         }
     }
 }
